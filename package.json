@@ -1,14 +1,30 @@
 {
   "name": "stylex-variants",
   "private": true,
+  "description": "Typed, compile-time variants for StyleX.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corvallo/stylex-variants.git"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt .",
+    "check-types": "turbo run check-types",
+    "init": "oxfmt --migrate prettier",
+    "changeset": "changeset",
+    "release:version": "changeset version",
+    "release:publish": "pnpm build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^3.0.3",
+    "@stylexjs/babel-plugin": "^0.19.1",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
     "prettier": "3.9.6",
     "turbo": "^2.11.5",
     "typescript": "7.0.2"
