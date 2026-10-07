@@ -1,0 +1,92 @@
+---
+sidebar_position: 2
+---
+
+# Installation
+
+StyleX Variants is an ESM package for Vite applications using StyleX. You need
+StyleX, the variants package, and the Babel and Vite integrations that compile
+both libraries at build time.
+
+## Install the packages
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+<Tabs groupId="package-manager" queryString="package-manager">
+<TabItem value="npm" label="npm" default>
+
+```sh
+npm install @stylex-variants/core @stylexjs/stylex
+npm install -D @babel/core@^8 @rolldown/plugin-babel @stylexjs/unplugin
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```sh
+pnpm add @stylex-variants/core @stylexjs/stylex
+pnpm add -D @babel/core@^8 @rolldown/plugin-babel @stylexjs/unplugin
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```sh
+yarn add @stylex-variants/core @stylexjs/stylex
+yarn add --dev @babel/core@^8 @rolldown/plugin-babel @stylexjs/unplugin
+```
+
+</TabItem>
+</Tabs>
+
+The package currently targets ESM consumers and is verified with Vite 8,
+Babel 8 and StyleX 0.19.1.
+
+## Configure Vite
+
+Configure the variants Babel plugin before the StyleX plugin in Vite:
+
+```ts
+import babel from "@rolldown/plugin-babel";
+import stylex from "@stylexjs/unplugin/vite";
+import variants from "@stylex-variants/core/babel";
+import react from "@vitejs/plugin-react";
+
+export default {
+  plugins: [react(), babel({ plugins: [variants] }), stylex()],
+};
+```
+
+The order is significant: StyleX Variants first expands the `sxv` recipe and
+the StyleX plugin then compiles the resulting styles. Import a CSS asset from
+the application entry point so Vite has an output asset for the generated
+StyleX rules in production:
+
+```ts
+import "./index.css";
+```
+
+## Create your first recipe
+
+```tsx
+import { sxv } from "@stylex-variants/core";
+
+const button = sxv({
+  base: { display: "inline-flex" },
+  variants: {
+    tone: {
+      primary: { backgroundColor: "blue", color: "white" },
+      neutral: { backgroundColor: "gray", color: "black" },
+    },
+  },
+  defaultVariants: { tone: "primary" },
+});
+
+export function Button() {
+  return <button {...button({ tone: "primary" })}>Continue</button>;
+}
+```
+
+The Babel transform must run during the build. Calling `sxv()` without the
+transform is unsupported and throws a configuration error.

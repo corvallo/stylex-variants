@@ -1,0 +1,72 @@
+.concepts {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 4rem;
+  padding: 2rem 1rem 6rem;
+}
+.eyebrow {
+  color: var(--ifm-color-primary);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.conceptList h2 {
+  margin-bottom: 2rem;
+  font-size: 2.2rem;
+}
+.conceptTab {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0.25rem 0;
+  padding: 1rem;
+  border: 0;
+  border-left: 2px solid var(--ifm-color-emphasis-300);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.conceptTab span {
+  opacity: 0.7;
+}
+.conceptTabActive {
+  border-left-color: var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-100);
+}
+.conceptPanel {
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 1rem;
+  box-shadow: 0 1.5rem 4rem rgb(33 21 82 / 12%);
+  background: var(--ifm-background-surface-color);
+}
+.conceptPanel > * {
+  padding: 1.5rem;
+}
+.conceptPanel > a {
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0 1.5rem 1.5rem;
+  font-weight: 600;
+}
+.conceptPanel :global(.theme-code-block),
+.conceptPanel :global(pre) {
+  margin: 0;
+}
+.conceptPanel :global(pre) {
+  border-radius: 0;
+  padding: 1.5rem;
+  background: #171522;
+  color: #e8e4ff;
+}
+@media screen and (max-width: 996px) {
+  .concepts {
+    grid-template-columns: 1fr;
+  }
+}

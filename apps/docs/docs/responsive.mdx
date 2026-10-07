@@ -1,0 +1,36 @@
+---
+sidebar_position: 7
+---
+
+# Responsive variants
+
+Responsive values belong in StyleX style objects. Keep the recipe static and
+use StyleX media queries for the styles that change at a breakpoint.
+
+```tsx
+const panel = sxv({
+  base: {
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    "@media (min-width: 768px)": {
+      gridTemplateColumns: "1fr 1fr",
+    },
+  },
+});
+```
+
+You can combine responsive styles with regular variants:
+
+```tsx
+const button = sxv({
+  variants: {
+    size: {
+      sm: { padding: 8 },
+      lg: { padding: 16, "@media (max-width: 640px)": { padding: 10 } },
+    },
+  },
+});
+```
+
+Breakpoints and media query syntax are provided by StyleX. The values must stay
+static so the Babel transform can compile them.

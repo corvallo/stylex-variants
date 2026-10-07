@@ -1,0 +1,28 @@
+---
+sidebar_position: 4
+---
+
+# Compound variants
+
+Compound variants apply an additional style when multiple variant selections
+match at the same time. They are useful for states that should not become a
+separate variant group, such as an emphasized large primary button.
+
+Compound variants apply a style when multiple selections match:
+
+```ts
+const button = sxv({
+  variants: {
+    tone: { primary: { color: "blue" } },
+    size: { lg: { fontSize: 18 } },
+  },
+  compoundVariants: [{ tone: "primary", size: "lg", style: { fontWeight: 700 } }],
+});
+```
+
+Multiple matching compounds are applied in declaration order.
+
+Compound conditions are evaluated after base styles and regular variants. When
+the same property is declared more than once, the later StyleX composition
+determines the final result. A compound can also rely on default variants when
+the caller omits those values.

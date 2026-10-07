@@ -1,0 +1,29 @@
+---
+sidebar_position: 5
+---
+
+# Current limitations
+
+StyleX Variants deliberately keeps recipes static so the Babel transform can
+emit deterministic StyleX output. These constraints are checked at compile
+time:
+
+- Configuration and styles must be static inline literals.
+- Spreads, computed keys, external style objects and dynamic style functions
+  are rejected.
+- The package currently targets ESM and Babel 8.
+- Slots, extension and composition APIs are not implemented yet.
+
+## Unsupported configuration
+
+The following patterns cannot be analyzed safely:
+
+```ts
+const styles = getStyles();
+sxv({ base: styles });
+
+sxv({ variants: { ...externalVariants } });
+sxv({ variants: { tone: { primary: condition ? a : b } } });
+```
+
+Keep the recipe configuration inline and use static StyleX style objects.

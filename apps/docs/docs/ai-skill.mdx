@@ -1,0 +1,49 @@
+---
+sidebar_position: 8
+---
+
+# LLM resources
+
+Markdown resources for working with StyleX Variants in an LLM. Pass these files
+as context to your agent or use them directly in prompts when generating and
+reviewing recipes.
+
+The resources are versioned with the repository and describe the real
+`@stylex-variants/core` API.
+
+## Resources
+
+| Resource                                                                                                                             | Use it for                           |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
+| [`SKILL.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/SKILL.md)                        | General routing and recipe workflow  |
+| [`api.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/api.md)                 | Configuration and exported types     |
+| [`patterns.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/patterns.md)       | React component examples             |
+| [`limitations.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/limitations.md) | Unsupported patterns and constraints |
+
+You can also browse the [resource source on GitHub](https://github.com/corvallo/stylex-variants/tree/main/skills/stylex-variants).
+
+## What the resources cover
+
+The skill covers:
+
+- `base`, `variants`, `defaultVariants` and `compoundVariants`;
+- boolean variants and explicit `false` values;
+- `className`, `style` and responsive StyleX styles;
+- typed React components with `VariantProps`;
+- static configuration requirements and unsupported APIs.
+
+## Use with an LLM
+
+Copy the `skills/stylex-variants` directory into the skill directory used by
+your LLM environment, or provide the Markdown files as prompt context. The
+entrypoint is `SKILL.md`; load the reference files when the task needs detailed
+API or limitation guidance.
+
+Keep the skill version aligned with the package version. When the library API
+changes, update the skill and its references in the same change.
+
+## What the skill does not do
+
+The skill provides instructions and examples; it does not install the npm
+package, configure Babel, or execute code by itself. The project still needs
+the normal [installation and Vite configuration](./installation).

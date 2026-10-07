@@ -1,0 +1,29 @@
+---
+sidebar_position: 5
+---
+
+# Boolean variants
+
+Boolean variants model flags such as `disabled`, `loading` or `fullWidth`.
+Define both `true` and `false` when the styles need to change in both states.
+
+```tsx
+const button = sxv({
+  variants: {
+    fullWidth: {
+      true: { width: "100%" },
+      false: { width: "auto" },
+    },
+  },
+  defaultVariants: { fullWidth: false },
+});
+```
+
+The generated prop is typed as `boolean`. Omitting it uses the configured
+default; passing `false` explicitly does not fall back to the default `true`.
+
+```tsx
+button({}); // false styles
+button({ fullWidth: true });
+button({ fullWidth: false });
+```

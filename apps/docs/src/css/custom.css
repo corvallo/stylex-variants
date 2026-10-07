@@ -1,0 +1,81 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");
+
+/* StyleX Variants brand tokens layered on top of Infima. */
+:root {
+  --ifm-color-primary: #5b3df5;
+  --ifm-color-primary-dark: #4b2fe2;
+  --ifm-color-primary-darker: #3e25c7;
+  --ifm-color-primary-darkest: #301b9f;
+  --ifm-color-primary-light: #755df7;
+  --ifm-color-primary-lighter: #8d7bfa;
+  --ifm-color-primary-lightest: #b1a5fc;
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8faff;
+  --ifm-font-color-base: #111827;
+  --ifm-heading-color: #070b18;
+  --ifm-navbar-background-color: rgb(255 255 255 / 92%);
+  --ifm-code-background: #f1f5f9;
+  --ifm-code-font-size: 95%;
+  --ifm-font-family-base: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --ifm-heading-font-family: "Space Grotesk", "DM Sans", ui-sans-serif, sans-serif;
+  --ifm-font-family-monospace: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+[data-theme="dark"] {
+  --ifm-color-primary: #7c6cf8;
+  --ifm-color-primary-dark: #6d5cf4;
+  --ifm-color-primary-darker: #5c4aed;
+  --ifm-color-primary-darkest: #4a38d7;
+  --ifm-color-primary-light: #9689fa;
+  --ifm-color-primary-lighter: #aea4fc;
+  --ifm-color-primary-lightest: #c9c2fd;
+  --ifm-background-color: #070b18;
+  --ifm-background-surface-color: #0d1224;
+  --ifm-font-color-base: #e2e8f0;
+  --ifm-heading-color: #f8fafc;
+  --ifm-navbar-background-color: rgb(7 11 24 / 92%);
+  --ifm-code-background: #0a0f1f;
+  --docusaurus-highlighted-code-line-bg: rgb(124 108 248 / 12%);
+}
+
+.navbar {
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] .navbar {
+  border-bottom-color: #171f35;
+}
+.navbar__title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ifm-heading-font-family);
+  letter-spacing: -0.025em;
+}
+
+code,
+pre {
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.theme-doc-sidebar-item-link-level-1.menu__link--active {
+  background: rgb(124 108 248 / 10%);
+  color: #8b82fa;
+}
+
+[data-theme="dark"] .theme-doc-markdown pre {
+  border: 1px solid #202a44;
+  background: #0a0f1f;
+}
+
+.theme-doc-markdown code {
+  border-color: var(--ifm-color-emphasis-300);
+}
