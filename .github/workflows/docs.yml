@@ -3,6 +3,11 @@ name: Documentation
 on:
   push:
     branches: [main]
+    paths:
+      - "apps/docs/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/docs.yml"
 
 permissions:
   contents: read

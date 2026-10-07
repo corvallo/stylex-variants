@@ -1,5 +1,7 @@
 # StyleX Variants
 
+![StyleX Variants](assets/stylex-variants-banner.png)
+
 Typed, compile-time variants for [StyleX](https://stylexjs.com/), inspired by
 [Tailwind Variants](https://www.tailwind-variants.org/).
 
