@@ -1,0 +1,53 @@
+.demoSection {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 5rem 1rem;
+}
+.demoCopy h2 {
+  font-size: 2.5rem;
+}
+.eyebrow {
+  color: var(--ifm-color-primary);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.demoCard {
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 1rem;
+  box-shadow: 0 1.5rem 4rem rgb(33 21 82 / 12%);
+}
+.demoToolbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  background: var(--ifm-color-emphasis-100);
+  font-size: 0.8rem;
+}
+.demoCard :global(.theme-code-block),
+.demoCard :global(pre) {
+  margin: 0;
+}
+.demoCard :global(pre) {
+  border-radius: 0;
+  padding: 1.5rem;
+  background: #171522;
+  color: #e8e4ff;
+}
+.previewButtons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 1.25rem;
+}
+@media screen and (max-width: 996px) {
+  .demoSection {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,37 @@
+---
+sidebar_position: 6
+---
+
+# Overriding styles
+
+Recipes provide defaults, but components still need an escape hatch for local
+changes. A recipe accepts `className` and `style` alongside variant props.
+
+## Add a custom class
+
+```tsx
+<button {...button({ tone: "primary", className: "focus-ring" })} />
+```
+
+The custom class is appended to the generated StyleX class name.
+
+## Add inline styles
+
+```tsx
+<button {...button({ style: { minWidth: 160 } })} />
+```
+
+The supplied inline style is merged with the StyleX style object. Use this for
+values that are genuinely local or computed at runtime; keep reusable visual
+states in the recipe variants.
+
+## Precedence
+
+Styles are composed in this order:
+
+1. `base`
+2. matching variant styles
+3. matching `compoundVariants`, in declaration order
+4. caller-provided `className` and `style`
+
+Prefer a new variant when an override represents a recurring component state.

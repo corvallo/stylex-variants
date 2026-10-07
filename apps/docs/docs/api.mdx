@@ -1,0 +1,44 @@
+---
+sidebar_position: 7
+---
+
+# API reference
+
+## `sxv(config)`
+
+Creates a typed recipe. The call is transformed at build time by the Babel
+plugin into static StyleX styles.
+
+### Configuration
+
+| Property           | Required | Description                                         |
+| ------------------ | -------- | --------------------------------------------------- |
+| `base`             | No       | Style applied to every recipe call.                 |
+| `variants`         | No       | Named groups and their possible values.             |
+| `defaultVariants`  | No       | Values used when a prop is omitted.                 |
+| `compoundVariants` | No       | Extra styles activated by matching multiple values. |
+
+All style objects must be static StyleX-compatible objects. See
+[limitations](./limitations) for unsupported dynamic patterns.
+
+## `VariantProps<typeof recipe>`
+
+Extracts the variant props accepted by a recipe for use in component APIs:
+
+```tsx
+type ButtonProps = VariantProps<typeof button> & {
+  children: React.ReactNode;
+};
+```
+
+The extracted type includes `className` and `style`, which are merged with the
+StyleX result when supplied.
+
+## Return value
+
+Calling a recipe returns the object produced by `stylex.props`. It can be
+spread directly on an element:
+
+```tsx
+<button {...button({ tone: "primary" })}>Save</button>
+```

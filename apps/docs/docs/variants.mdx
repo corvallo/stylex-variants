@@ -1,0 +1,52 @@
+---
+sidebar_position: 3
+---
+
+# Variants
+
+A recipe combines a base style with named variant groups. Each group maps the
+values accepted by a prop to a static StyleX style object. The resulting
+function is typed from that map, so invalid values are rejected by TypeScript.
+
+```tsx
+import { sxv, type VariantProps } from "@stylex-variants/core";
+
+const button = sxv({
+  base: { display: "inline-flex", borderRadius: 8 },
+  variants: {
+    tone: {
+      primary: { backgroundColor: "blue", color: "white" },
+      neutral: { backgroundColor: "gray", color: "black" },
+    },
+    size: { sm: { padding: 8 }, lg: { padding: 16 } },
+  },
+  defaultVariants: { tone: "primary", size: "sm" },
+});
+
+type ButtonVariants = VariantProps<typeof button>;
+```
+
+## Selecting variants
+
+Use the recipe with only the values that need to change:
+
+```tsx
+button({ tone: "neutral", size: "lg" });
+button({}); // primary + sm defaults
+```
+
+`button(...)` returns props that can be spread onto a React element. Omitted
+variant props use their configured defaults. The returned props can also merge
+an existing `className` and inline `style`:
+
+```tsx
+<button {...button({ tone: "primary", className: "focus-ring" })} />
+```
+
+Boolean variants use `true` and `false` keys. An explicitly supplied `false`
+value is preserved and takes precedence over a `true` default.
+
+## Component props
+
+Use `VariantProps` to expose the recipe selections from a React component while
+keeping the recipe implementation in one place.
