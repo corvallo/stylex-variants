@@ -2,6 +2,7 @@ import type { PluginObject } from "@babel/core";
 import { transformCallExpression } from "./transform-recipe.js";
 import * as t from "@babel/types";
 import type { PluginState } from "./state.js";
+import { transformExtend } from "./transform-extend.js";
 
 export default function stylexVariantsPlugin(): PluginObject<PluginState> {
   return {
@@ -38,9 +39,19 @@ export default function stylexVariantsPlugin(): PluginObject<PluginState> {
         }
       },
 
-      CallExpression: transformCallExpression,
+      CallExpression(path, state) {
+        if (transformExtend(path)) return;
+        transformCallExpression(path, state);
+      },
 
       Program: {
+        enter(path) {
+          path.traverse({
+            CallExpression(callPath) {
+              transformExtend(callPath);
+            },
+          });
+        },
         exit(path, state) {
           path.scope.crawl();
           for (const specifier of state.sxvImports ?? []) {
