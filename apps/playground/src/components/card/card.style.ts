@@ -15,20 +15,23 @@ export const card = sxv({
   variants: {
     appearance: {
       elevated: {
-        backgroundColor: tokens.heading,
-        borderColor: tokens.surface,
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+        backgroundColor: tokens.surface,
+        borderColor: tokens.border,
+        color: tokens.text,
+        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.24)",
       },
 
       outlined: {
-        backgroundColor: tokens.heading,
+        backgroundColor: tokens.background,
         borderColor: tokens.border,
+        color: tokens.text,
         boxShadow: "none",
       },
 
       filled: {
         backgroundColor: tokens.surface,
-        borderColor: tokens.surface,
+        borderColor: tokens.border,
+        color: tokens.text,
         boxShadow: "none",
       },
     },

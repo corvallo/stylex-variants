@@ -113,7 +113,10 @@ export function App() {
             <div {...stylex.props(styles.panel)}>
               <Card>
                 <strong>Compound variant</strong>
-                <span>Primary + large activates the uppercase compound style.</span>
+                <span>
+                  When <code>variant="primary"</code> and <code>size="lg"</code> match, the compound rule adds
+                  uppercase text and letter spacing in one declaration.
+                </span>
                 <Button variant="primary" size="lg">
                   Compound
                 </Button>
