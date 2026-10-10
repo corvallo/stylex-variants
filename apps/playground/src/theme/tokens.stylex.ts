@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-export const tokens = {
+export const tokens = stylex.defineVars({
   background: "#070b18",
   surface: "#0d1224",
   code: "#0a0f1f",
@@ -14,7 +14,7 @@ export const tokens = {
   success: "#34d399",
   warning: "#fbbf24",
   danger: "#fb7185",
-} as const;
+});
 
 export const theme = stylex.create({
   root: { backgroundColor: tokens.background, color: tokens.text },
