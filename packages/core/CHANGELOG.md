@@ -1,5 +1,11 @@
 # @stylex-variants/core
 
+## 0.1.0
+
+### Minor Changes
+
+- 1d11652: Add static slots, slot variants, default variants, and `compoundSlots` support.
+
 ## 0.0.3
 
 ### Patch Changes
