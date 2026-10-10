@@ -43,6 +43,60 @@ function getPropertyName(property: t.ObjectProperty): string | undefined {
   return undefined;
 }
 
+function mergeObjectProperties(base: t.ObjectExpression, extension: t.ObjectExpression): t.ObjectExpression {
+  const properties = base.properties.map((property) => t.cloneNode(property, true));
+  for (const property of extension.properties) {
+    if (!t.isObjectProperty(property)) continue;
+    const name = getPropertyName(property);
+    const existing = properties.find(
+      (candidate) => t.isObjectProperty(candidate) && getPropertyName(candidate) === name,
+    );
+    if (existing && t.isObjectProperty(existing)) {
+      existing.value = t.cloneNode(property.value, true);
+    } else {
+      properties.push(t.cloneNode(property, true));
+    }
+  }
+  return t.objectExpression(properties);
+}
+
+function mergeRecipeConfigs(base: t.ObjectExpression, extension: t.ObjectExpression): t.ObjectExpression {
+  const result = t.objectExpression([]);
+  const names = new Set<string>();
+  for (const property of [...base.properties, ...extension.properties]) {
+    if (!t.isObjectProperty(property)) continue;
+    const name = getPropertyName(property);
+    if (!name || names.has(name)) continue;
+    names.add(name);
+    const baseProperty = getObjectProperty(base, name);
+    const extensionProperty = getObjectProperty(extension, name);
+    if (name === "variants" && baseProperty && extensionProperty && t.isObjectExpression(baseProperty.value) && t.isObjectExpression(extensionProperty.value)) {
+      const groups = t.objectExpression([]);
+      const groupNames = new Set<string>();
+      for (const group of [...baseProperty.value.properties, ...extensionProperty.value.properties]) {
+        if (!t.isObjectProperty(group)) continue;
+        const groupName = getPropertyName(group);
+        if (!groupName || groupNames.has(groupName)) continue;
+        groupNames.add(groupName);
+        const oldGroup = baseProperty.value.properties.find((item) => t.isObjectProperty(item) && getPropertyName(item) === groupName);
+        const newGroup = extensionProperty.value.properties.find((item) => t.isObjectProperty(item) && getPropertyName(item) === groupName);
+        if (oldGroup && newGroup && t.isObjectProperty(oldGroup) && t.isObjectProperty(newGroup) && t.isObjectExpression(oldGroup.value) && t.isObjectExpression(newGroup.value)) {
+          groups.properties.push(t.objectProperty(t.stringLiteral(groupName), mergeObjectProperties(oldGroup.value, newGroup.value)));
+        } else groups.properties.push(t.cloneNode(group, true));
+      }
+      result.properties.push(t.objectProperty(t.stringLiteral(name), groups));
+    } else if (name === "compoundVariants" && baseProperty && extensionProperty && t.isArrayExpression(baseProperty.value) && t.isArrayExpression(extensionProperty.value)) {
+      result.properties.push(t.objectProperty(t.stringLiteral(name), t.arrayExpression([...baseProperty.value.elements, ...extensionProperty.value.elements].map((element) => element && t.cloneNode(element, true)))));
+    } else if (name === "base" && baseProperty && extensionProperty && t.isObjectExpression(baseProperty.value) && t.isObjectExpression(extensionProperty.value)) {
+      result.properties.push(t.objectProperty(t.stringLiteral(name), mergeObjectProperties(baseProperty.value, extensionProperty.value)));
+    } else if (name === "defaultVariants" && baseProperty && extensionProperty && t.isObjectExpression(baseProperty.value) && t.isObjectExpression(extensionProperty.value)) {
+      result.properties.push(t.objectProperty(t.stringLiteral(name), mergeObjectProperties(baseProperty.value, extensionProperty.value)));
+    } else if (extensionProperty) result.properties.push(t.cloneNode(extensionProperty, true));
+    else if (baseProperty) result.properties.push(t.cloneNode(baseProperty, true));
+  }
+  return result;
+}
+
 function normaliseVariantValue(expression: t.Expression): t.Expression {
   return t.callExpression(t.identifier("String"), [expression]);
 }
@@ -511,6 +565,23 @@ export default function stylexVariantsPlugin(): PluginObject<PluginState> {
       },
 
       Program: {
+        enter(path) {
+          path.traverse({
+            CallExpression(callPath) {
+              const call = callPath.node;
+              if (!t.isMemberExpression(call.callee) || !t.isIdentifier(call.callee.object) || !t.isIdentifier(call.callee.property, { name: "extend" })) return;
+              const binding = callPath.scope.getBinding(call.callee.object.name);
+              if (!binding?.path.isImportSpecifier() || !t.isIdentifier(binding.path.node.imported, { name: "sxv" })) return;
+              const [baseReference, extension] = call.arguments;
+              if (!t.isIdentifier(baseReference) || !t.isObjectExpression(extension)) return;
+              const baseBinding = callPath.scope.getBinding(baseReference.name);
+              if (!baseBinding?.path.isVariableDeclarator() || !t.isCallExpression(baseBinding.path.node.init)) return;
+              const baseCall = baseBinding.path.node.init;
+              if (!t.isIdentifier(baseCall.callee) || baseCall.arguments.length !== 1 || !t.isObjectExpression(baseCall.arguments[0])) return;
+              callPath.replaceWith(t.callExpression(t.cloneNode(baseCall.callee), [mergeRecipeConfigs(baseCall.arguments[0], extension)]));
+            },
+          });
+        },
         exit(path, state) {
           path.scope.crawl();
           for (const specifier of state.sxvImports ?? []) {

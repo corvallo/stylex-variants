@@ -11,8 +11,11 @@ time:
 - Configuration and styles must be static inline literals.
 - Spreads, computed keys, external style objects and dynamic style functions
   are rejected.
+- `sxv.extend` must reference a base recipe declared in the same module. The
+  Babel plugin does not follow imported recipes yet; re-export the extended
+  recipe from another style module if you need a separate component folder.
 - The package currently targets ESM and Babel 8.
-- Slots, extension and composition APIs are not implemented yet.
+- Slots and composition APIs are not implemented yet.
 
 ## Unsupported configuration
 
