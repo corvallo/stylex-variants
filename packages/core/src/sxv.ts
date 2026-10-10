@@ -33,7 +33,9 @@ export type SXVFactory = {
 
 export const sxv: SXVFactory = Object.assign(
   (_config: unknown) => {
-    throw new Error("sxv() must be compiled. Configure @stylex-variants/core/babel before the StyleX compiler.");
+    return (() => {
+      throw new Error("sxv() must be compiled. Configure @stylex-variants/core/babel before the StyleX compiler.");
+    }) as any;
   },
   {
     extend: (_base: unknown, _config: unknown) => {
