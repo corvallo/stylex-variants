@@ -110,3 +110,24 @@ export const button = sxv({
     },
   ],
 });
+
+export const iconButton = sxv.extend(button, {
+  base: {
+    width: 40,
+    height: 40,
+    padding: 0,
+    borderRadius: 999,
+  },
+  variants: {
+    fullWidth: {
+      false: { width: 40 },
+      true: { width: "100%" },
+    },
+    size: {
+      sm: { width: 32, height: 32 },
+      md: { width: 40, height: 40 },
+      lg: { width: 48, height: 48 },
+    },
+  },
+  defaultVariants: { size: "md" },
+});

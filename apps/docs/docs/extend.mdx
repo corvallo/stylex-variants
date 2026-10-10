@@ -1,0 +1,74 @@
+---
+sidebar_position: 5
+---
+
+# Extend
+
+Use `sxv.extend` to derive a recipe from an existing recipe while preserving
+its variants and defaults.
+
+```tsx
+const button = sxv({
+  base: styles.base,
+  variants: {
+    tone: { primary: styles.primary, neutral: styles.neutral },
+  },
+  defaultVariants: { tone: "primary" },
+});
+
+const iconButton = sxv.extend(button, {
+  base: styles.iconButton,
+  variants: {
+    size: { sm: styles.small, lg: styles.large },
+  },
+});
+```
+
+The extended recipe accepts both the original and new variant groups. Base
+styles are composed in extension order, variant groups are merged by name,
+extension values override matching values, defaults are overridden by the
+extension, and compound variants are appended.
+
+`extend` is compile-time only. The source recipe and extension configuration
+must be statically analyzable by the Babel plugin.
+
+## Where the base recipe must live
+
+The base recipe and the extension must currently be declared in the same
+module. The Babel plugin reads the source recipe configuration while compiling
+the file; it does not follow imports and cannot reconstruct a recipe from a
+separate module.
+
+This works:
+
+```tsx title="button.style.ts"
+export const button = sxv({
+  base: styles.button,
+  variants: { tone: { primary: styles.primary } },
+});
+
+export const iconButton = sxv.extend(button, {
+  base: styles.iconButton,
+});
+```
+
+This is not supported yet:
+
+```tsx title="icon-button.style.ts"
+import { button } from "../button/button.style";
+
+// The compiler cannot inspect the imported recipe here.
+export const iconButton = sxv.extend(button, {
+  base: styles.iconButton,
+});
+```
+
+Keep the component implementation in its own file and re-export the recipe
+from a component-specific style module when you want a separate component
+folder:
+
+```tsx title="icon-button.style.ts"
+export { iconButton } from "../button/button.style";
+```
+
+This restriction only applies to the location of the recipe declarations.

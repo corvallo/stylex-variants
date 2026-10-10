@@ -41,3 +41,25 @@ export type SXVSlotsResult<
 export type VariantProps<T> = T extends (props?: infer Props) => ReturnType<typeof stylex.props>
   ? Props
   : never;
+
+export type SXVConfig<T extends VariantDefinition> = {
+  base?: StyleXCreateStyle;
+  variants?: T;
+  defaultVariants?: VariantSelection<T>;
+  compoundVariants?: CompoundVariant<T>[];
+};
+
+export type VariantDefinitionOf<T> = T extends SXVResult<infer Variants> ? Variants : never;
+
+export type MergeVariantDefinitions<
+  Base extends VariantDefinition,
+  Extension extends VariantDefinition,
+> = {
+  [K in keyof Base | keyof Extension]: K extends keyof Extension
+    ? K extends keyof Base
+      ? Base[K] & Extension[K]
+      : Extension[K]
+    : K extends keyof Base
+      ? Base[K]
+      : never;
+};
