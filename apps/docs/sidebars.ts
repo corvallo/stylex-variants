@@ -7,10 +7,19 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "Concepts",
-      items: ["variants", "boolean-variants", "compound-variants", "overriding", "responsive", "extend", "slots"],
+      items: [
+        "variants",
+        "boolean-variants",
+        "compound-variants",
+        "overriding",
+        "responsive",
+        "extend",
+        "slots",
+      ],
     },
 
     "api",
+    "playground",
     "ai-skill",
     "limitations",
   ],

@@ -1,0 +1,30 @@
+---
+sidebar_position: 8
+---
+
+# Playground
+
+The repository playground is a small Vite application that exercises the
+public API with the same Babel and StyleX pipeline used by a consumer project.
+It includes examples for:
+
+- named and boolean variants;
+- defaults and compound variants;
+- `className` and `style` overrides;
+- recipe extension with `sxv.extend`;
+- multi-slot recipes and `compoundSlots`.
+
+Run it from a repository checkout:
+
+```sh
+pnpm install
+pnpm dev:playground
+```
+
+To build it as a consumer-facing check:
+
+```sh
+pnpm --filter playground build
+```
+
+The source is available in [`apps/playground`](https://github.com/corvallo/stylex-variants/tree/main/apps/playground).
