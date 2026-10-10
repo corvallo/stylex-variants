@@ -2,6 +2,7 @@ import { Alert } from "./components/alert/alert";
 import { Badge } from "./components/badge/badge";
 import { Button } from "./components/button/button";
 import { Card } from "./components/card/card";
+import { SlotCard } from "./components/slot-card/slot-card";
 
 export function App() {
   return (
@@ -145,6 +146,14 @@ export function App() {
             Error + strong produces the special compound styling.
           </Alert>
         </div>
+      </section>
+
+      <section>
+        <h2>Slots</h2>
+        <SlotCard tone="accent">
+          <strong>Card description</strong>
+          <span>Each part of this card has its own StyleX slot.</span>
+        </SlotCard>
       </section>
     </main>
   );

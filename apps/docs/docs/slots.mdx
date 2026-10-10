@@ -1,0 +1,39 @@
+---
+sidebar_position: 6
+---
+
+# Slots
+
+Use `slots` when a component has multiple elements that need independent
+StyleX styles. Each slot returns the same `className` and `style` props as a
+regular recipe.
+
+```tsx
+const card = sxv({
+  slots: {
+    root: { display: "flex", flexDirection: "column" },
+    title: { fontSize: 18, fontWeight: 700 },
+  },
+  variants: {
+    tone: {
+      neutral: { root: { backgroundColor: "#fff" } },
+      accent: { root: { backgroundColor: "#eff6ff" } },
+    },
+  },
+  defaultVariants: { tone: "neutral" },
+  compoundSlots: [
+    {
+      tone: "accent",
+      slots: { root: { borderWidth: 2 } },
+    },
+  ],
+});
+
+const styles = card();
+<article {...styles.root()}>
+  <h2 {...styles.title({ className: "custom-title" })}>Title</h2>
+</article>;
+```
+
+Slots are static StyleX recipes. The compiler creates one StyleX style map per
+slot and merges optional `className` and `style` overrides at the call site.

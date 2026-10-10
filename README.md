@@ -70,7 +70,7 @@ Custom classes are concatenated and inline styles are merged with StyleX props.
 - Spreads, computed keys, external style objects and dynamic style functions are rejected.
 - Boolean variants use `true` and `false` keys.
 - ESM only; Babel 8 is required for the plugin.
-- Slots, extension and composition APIs are not implemented yet.
+- Composition APIs are not implemented yet.
 
 Calling `sxv()` without the Babel transform throws a configuration error.
 

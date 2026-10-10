@@ -10,4 +10,8 @@ export type {
   VariantProps,
   VariantSelection,
   SXVProps,
+  SlotDefinition,
+  SXVSlotsResult,
+  SlotVariantDefinition,
+  SlotCompoundVariant,
 } from "./types.js";

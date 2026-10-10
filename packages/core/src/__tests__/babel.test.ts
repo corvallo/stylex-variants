@@ -39,6 +39,27 @@ describe("babel plugin", () => {
     expect(result?.code).toContain("stylex.create");
   });
 
+  it("transforms static slots and preserves slot overrides", () => {
+    const result = transformSync(
+      `import { sxv } from '@stylex-variants/core'; const card = sxv({ slots: { root: { display: 'flex' }, title: { fontSize: 18 } } });`,
+      { plugins: [plugin] },
+    );
+    expect(result?.code).toContain("slotStyles");
+    expect(result?.code).toContain("root: (_slotProps");
+    expect(result?.code).toContain("title: (_slotProps");
+    expect(result?.code).toContain("Object.assign");
+  });
+
+  it("transforms slot variants and compoundSlots", () => {
+    const result = transformSync(
+      `import { sxv } from '@stylex-variants/core'; const card = sxv({ slots: { root: { display: 'flex' } }, variants: { tone: { accent: { root: { color: 'blue' } } } }, defaultVariants: { tone: 'accent' }, compoundSlots: [{ tone: 'accent', slots: { root: { borderWidth: 2 } } }] });`,
+      { plugins: [plugin] },
+    );
+    expect(result?.code).toContain("variant_tone_");
+    expect(result?.code).toContain("compound_0_root");
+    expect(result?.code).toContain("=== 'accent'");
+  });
+
   it("does not transform unrelated sxv functions", () => {
     const result = transformSync(
       `
@@ -187,6 +208,19 @@ describe("babel plugin", () => {
     expect(result?.code).toContain("stylex.props(_styles.base)");
 
     expect(result?.code).not.toContain("const button = sxv(");
+  });
+
+  it("merges generated props with className and style overrides", () => {
+    const result = transformSync(
+      `
+      import { sxv } from '@stylex-variants/core';
+      const button = sxv({ base: { color: 'red' } });
+    `,
+      { plugins: [plugin] },
+    );
+
+    expect(result?.code).toContain("_props.className");
+    expect(result?.code).toContain("Object.assign({}, _result.style, _props.style)");
   });
 
   it("removes the sxv import after transformation", () => {
