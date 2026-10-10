@@ -1,160 +1,67 @@
+import { useState } from "react";
+import * as stylex from "@stylexjs/stylex";
 import { Alert } from "./components/alert/alert";
 import { Badge } from "./components/badge/badge";
 import { Button } from "./components/button/button";
 import { Card } from "./components/card/card";
 import { SlotCard } from "./components/slot-card/slot-card";
+import { styles } from "./playground.style";
+
+const sections = ["recipes", "overrides", "slots"] as const;
+type Section = (typeof sections)[number];
 
 export function App() {
+  const [section, setSection] = useState<Section>("recipes");
+  const [tone, setTone] = useState<"primary" | "danger">("primary");
+  const [size, setSize] = useState<"sm" | "md" | "lg">("md");
+  const [fullWidth, setFullWidth] = useState(false);
+
   return (
-    <main
-      style={{
-        maxWidth: 1000,
-        margin: "0 auto",
-        padding: 40,
-        fontFamily: "Inter, system-ui, sans-serif",
-      }}
-    >
-      <h1>StyleX Variants Playground</h1>
-
-      <section>
-        <h2>Buttons</h2>
-
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 12,
-            alignItems: "center",
-          }}
-        >
-          <Button>Default</Button>
-
-          <Button variant="secondary" size="sm">
-            Secondary
-          </Button>
-
-          <Button variant="outline" size="sm">
-            Outline compound
-          </Button>
-
-          <Button variant="primary" size="lg">
-            Primary LG compound
-          </Button>
-
-          <Button variant="danger">Delete</Button>
-        </div>
-
-        <div
-          style={{
-            marginTop: 12,
-          }}
-        >
-          <Button variant="danger" fullWidth>
-            Full width danger compound
-          </Button>
-        </div>
-      </section>
-
-      <section>
-        <h2>Badges</h2>
-
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 8,
-          }}
-        >
-          <Badge>Neutral</Badge>
-
-          <Badge tone="success">Success</Badge>
-
-          <Badge tone="success" outlined>
-            Success outlined
-          </Badge>
-
-          <Badge tone="warning" outlined>
-            Warning outlined
-          </Badge>
-
-          <Badge tone="danger" size="sm" outlined>
-            Danger
-          </Badge>
-        </div>
-      </section>
-
-      <section>
-        <h2>Cards</h2>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: 16,
-          }}
-        >
-          <Card>
-            <strong>Default card</strong>
-
-            <span>Elevated, normal spacing and non-interactive.</span>
-
-            <Button size="sm">Action</Button>
-          </Card>
-
-          <Card appearance="outlined" spacing="relaxed">
-            <strong>Outlined card</strong>
-
-            <Badge tone="success">Active</Badge>
-
-            <span>This card uses relaxed spacing.</span>
-          </Card>
-
-          <Card appearance="filled" spacing="compact">
-            <strong>Filled compact</strong>
-
-            <span>This matches a compound variant.</span>
-          </Card>
-
-          <Card appearance="elevated" interactive>
-            <strong>Interactive</strong>
-
-            <span>Elevated + interactive compound.</span>
-          </Card>
-        </div>
-      </section>
-
-      <section>
-        <h2>Alerts</h2>
-
-        <div
-          style={{
-            display: "grid",
-            gap: 12,
-          }}
-        >
-          <Alert title="Information">This is the default alert.</Alert>
-
-          <Alert status="success" title="Success">
-            Everything completed successfully.
-          </Alert>
-
-          <Alert status="warning" emphasis="strong" title="Warning">
-            Strong warning compound variant.
-          </Alert>
-
-          <Alert status="error" emphasis="strong" title="Error">
-            Error + strong produces the special compound styling.
-          </Alert>
-        </div>
-      </section>
-
-      <section>
-        <h2>Slots</h2>
-        <SlotCard tone="accent">
-          <strong>Card description</strong>
-          <span>Each part of this card has its own StyleX slot.</span>
-        </SlotCard>
-      </section>
+    <main {...stylex.props(styles.page)}>
+      <div {...stylex.props(styles.shell)}>
+        <header {...stylex.props(styles.header)}>
+          <span {...stylex.props(styles.eyebrow)}>Interactive examples</span>
+          <h1 {...stylex.props(styles.title)}>StyleX Variants Playground</h1>
+          <p {...stylex.props(styles.lead)}>Explore recipes, change variant props, and compare each result with the source configuration.</p>
+        </header>
+        <nav aria-label="Playground sections" {...stylex.props(styles.nav)}>
+          {sections.map((item) => (
+            <button key={item} type="button" {...stylex.props(styles.navButton, section === item && styles.navButtonActive)} onClick={() => setSection(item)}>
+              {item === "recipes" ? "Variants & recipes" : item === "overrides" ? "Overrides & extend" : "Slots & compoundSlots"}
+            </button>
+          ))}
+        </nav>
+        {section === "recipes" && (
+          <section {...stylex.props(styles.section)}>
+            <div {...stylex.props(styles.sectionHeader)}><h2 {...stylex.props(styles.sectionTitle)}>Variants by default</h2><p {...stylex.props(styles.muted)}>Change the props below to see one recipe select different static StyleX rules.</p></div>
+            <div {...stylex.props(styles.panel)}>
+              <div {...stylex.props(styles.card)}>
+                <div {...stylex.props(styles.controls)}>
+                  <label {...stylex.props(styles.label)}>Tone<select {...stylex.props(styles.select)} value={tone} onChange={(event) => setTone(event.target.value as typeof tone)}><option value="primary">primary</option><option value="danger">danger</option></select></label>
+                  <label {...stylex.props(styles.label)}>Size<select {...stylex.props(styles.select)} value={size} onChange={(event) => setSize(event.target.value as typeof size)}><option value="sm">sm</option><option value="md">md</option><option value="lg">lg</option></select></label>
+                  <label {...stylex.props(styles.label)}>Full width<input type="checkbox" checked={fullWidth} onChange={(event) => setFullWidth(event.target.checked)} /></label>
+                </div>
+                <div {...stylex.props(styles.result)}><Button variant={tone} size={size} fullWidth={fullWidth}>Preview button</Button></div>
+                <span {...stylex.props(styles.note)}>Selected: tone={tone}, size={size}, fullWidth={String(fullWidth)}</span>
+              </div>
+              <pre {...stylex.props(styles.code)}><code>{`const button = sxv({\n  base: styles.base,\n  variants: { tone: { primary: styles.primary } },\n  defaultVariants: { tone: "primary" },\n});`}</code></pre>
+            </div>
+            <div {...stylex.props(styles.panel)}><Card><strong>Compound variant</strong><span>Primary + large activates the uppercase compound style.</span><Button variant="primary" size="lg">Compound</Button></Card><Alert status="warning" emphasis="strong" title="Boolean variant">Toggle `fullWidth` to select the explicit branch.</Alert></div>
+          </section>
+        )}
+        {section === "overrides" && (
+          <section {...stylex.props(styles.section)}>
+            <div {...stylex.props(styles.sectionHeader)}><h2 {...stylex.props(styles.sectionTitle)}>Overrides and extension</h2><p {...stylex.props(styles.muted)}>See call-site overrides and the derived recipe in action.</p></div>
+            <div {...stylex.props(styles.panel)}><div {...stylex.props(styles.card)}><Button className="custom-class" style={{ boxShadow: "0 0 0 3px #f0abfc" }}>className + style</Button><Badge tone="success" outlined>Override example</Badge></div><pre {...stylex.props(styles.code)}><code>{`const iconButton = sxv.extend(button, {\n  base: styles.iconButton,\n  variants: { size: styles.sizes },\n});`}</code></pre></div>
+          </section>
+        )}
+        {section === "slots" && (
+          <section {...stylex.props(styles.section)}>
+            <div {...stylex.props(styles.sectionHeader)}><h2 {...stylex.props(styles.sectionTitle)}>Slots and compoundSlots</h2><p {...stylex.props(styles.muted)}>Each slot selects its own StyleX output while sharing recipe variants.</p></div>
+            <div {...stylex.props(styles.panel)}><SlotCard tone="accent"><strong>Slot content</strong><span>Root, title, and description are independently styled.</span></SlotCard><pre {...stylex.props(styles.code)}><code>{`compoundSlots: [{\n  tone: "accent",\n  slots: { root: styles.accentRoot },\n}]`}</code></pre></div>
+          </section>
+        )}
+      </div>
     </main>
   );
 }

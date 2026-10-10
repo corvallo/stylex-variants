@@ -17,9 +17,35 @@ plugin into static StyleX styles.
 | `variants`         | No       | Named groups and their possible values.             |
 | `defaultVariants`  | No       | Values used when a prop is omitted.                 |
 | `compoundVariants` | No       | Extra styles activated by matching multiple values. |
+| `slots`            | No       | Named style maps for multi-element components.       |
+| `compoundSlots`    | No       | Conditional styles applied to one or more slots.     |
 
 All style objects must be static StyleX-compatible objects. See
 [limitations](./limitations) for unsupported dynamic patterns.
+
+### Call-site overrides
+
+Every recipe and slot accepts `className` and `style` in addition to its
+variant props. Generated StyleX props are merged with these values at the call
+site:
+
+```tsx
+button({
+  tone: "primary",
+  className: "custom-button",
+  style: { boxShadow: "0 0 0 2px blue" },
+});
+```
+
+For slots, pass overrides to the individual slot function:
+
+```tsx
+const cardStyles = card({ tone: "accent" });
+cardStyles.title({ className: "custom-title" });
+```
+
+See [overriding](./overriding), [extend](./extend), and [slots](./slots) for
+complete examples.
 
 ## `VariantProps<typeof recipe>`
 

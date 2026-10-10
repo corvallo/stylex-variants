@@ -1,4 +1,5 @@
-/* Placeholder to ensure Vite emits a CSS asset for StyleX aggregation. */
-:root {
-  --stylex-injection: 0;
-}
+/* Vite needs a CSS entry point for StyleX's generated rules. */
+:root { --stylex-injection: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, select, input { font: inherit; }
