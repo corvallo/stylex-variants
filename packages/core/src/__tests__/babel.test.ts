@@ -39,63 +39,25 @@ describe("babel plugin", () => {
     expect(result?.code).toContain("stylex.create");
   });
 
-  it("transforms sxv.extend by merging the source recipe", () => {
+  it("transforms static slots and preserves slot overrides", () => {
     const result = transformSync(
-      `
-      import { sxv } from '@stylex-variants/core';
-      const button = sxv({
-        base: { padding: 8 },
-        variants: { tone: { primary: { color: 'red' } } },
-      });
-      const iconButton = sxv.extend(button, {
-        base: { borderRadius: 8 },
-        variants: { size: { sm: { padding: 4 } } },
-      });
-    `,
+      `import { sxv } from '@stylex-variants/core'; const card = sxv({ slots: { root: { display: 'flex' }, title: { fontSize: 18 } } });`,
       { plugins: [plugin] },
     );
-
-    expect(result?.code).toContain("borderRadius");
-    expect(result?.code).toContain("iconButton");
-    expect(result?.code).not.toContain("sxv.extend");
+    expect(result?.code).toContain("slotStyles");
+    expect(result?.code).toContain("root: (_slotProps");
+    expect(result?.code).toContain("title: (_slotProps");
+    expect(result?.code).toContain("Object.assign");
   });
 
-  it("keeps inherited variant precedence over the extension base", () => {
+  it("transforms slot variants and compoundSlots", () => {
     const result = transformSync(
-      `
-      import { sxv } from '@stylex-variants/core';
-      const button = sxv({
-        base: { width: 40 },
-        variants: { fullWidth: { false: { width: 'auto' } } },
-        defaultVariants: { fullWidth: false },
-      });
-      const iconButton = sxv.extend(button, { base: { width: 40 } });
-    `,
+      `import { sxv } from '@stylex-variants/core'; const card = sxv({ slots: { root: { display: 'flex' } }, variants: { tone: { accent: { root: { color: 'blue' } } } }, defaultVariants: { tone: 'accent' }, compoundSlots: [{ tone: 'accent', slots: { root: { borderWidth: 2 } } }] });`,
       { plugins: [plugin] },
     );
-
-    expect(result?.code).toContain('variant_9_fullWidth_');
-    expect(result?.code).toContain("width: 'auto'");
-    expect(result?.code).toContain('width: 40');
-  });
-
-  it("allows an extension to override an inherited variant", () => {
-    const result = transformSync(
-      `
-      import { sxv } from '@stylex-variants/core';
-      const button = sxv({
-        variants: { fullWidth: { false: { width: 'auto' } } },
-        defaultVariants: { fullWidth: false },
-      });
-      const iconButton = sxv.extend(button, {
-        variants: { fullWidth: { false: { width: 40 } } },
-      });
-    `,
-      { plugins: [plugin] },
-    );
-
-    expect(result?.code).toContain('width: 40');
-    expect(result?.code?.match(/width: 'auto'/g)).toHaveLength(1);
+    expect(result?.code).toContain("variant_tone_");
+    expect(result?.code).toContain("compound_0_root");
+    expect(result?.code).toContain("=== 'accent'");
   });
 
   it("does not transform unrelated sxv functions", () => {
@@ -246,6 +208,19 @@ describe("babel plugin", () => {
     expect(result?.code).toContain("stylex.props(_styles.base)");
 
     expect(result?.code).not.toContain("const button = sxv(");
+  });
+
+  it("merges generated props with className and style overrides", () => {
+    const result = transformSync(
+      `
+      import { sxv } from '@stylex-variants/core';
+      const button = sxv({ base: { color: 'red' } });
+    `,
+      { plugins: [plugin] },
+    );
+
+    expect(result?.code).toContain("_props.className");
+    expect(result?.code).toContain("Object.assign({}, _result.style, _props.style)");
   });
 
   it("removes the sxv import after transformation", () => {

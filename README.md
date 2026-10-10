@@ -64,46 +64,13 @@ export function Button(props: ButtonVariants) {
 used when a selection is omitted; explicit `false` overrides a boolean default.
 Custom classes are concatenated and inline styles are merged with StyleX props.
 
-## Extending a recipe
-
-Create a new recipe from an existing one with `sxv.extend`. Existing variant
-groups are preserved, matching values are overridden by the extension, defaults
-from the extension take precedence, and compound variants are appended.
-
-```tsx
-const iconButton = sxv.extend(button, {
-  base: { borderRadius: 999 },
-  variants: {
-    size: { sm: { padding: 4 }, lg: { padding: 12 } },
-  },
-});
-```
-
-The base recipe and the extension must currently be declared in the same
-module. The Babel plugin analyzes the base configuration at compile time and
-does not follow imported recipes. Keep the component files separate if useful,
-but declare the extended recipe beside its base and re-export it from the
-component's style module:
-
-```tsx
-// button.style.ts
-export const button = sxv({ /* ... */ });
-export const iconButton = sxv.extend(button, { base: styles.iconButton });
-
-// icon-button.style.ts
-export { iconButton } from "../button/button.style";
-```
-
-Calling `sxv.extend` with a recipe imported from another module is not supported
-yet and will remain uncompiled.
-
 ## Current limitations
 
 - Configuration and styles must be static inline literals.
 - Spreads, computed keys, external style objects and dynamic style functions are rejected.
 - Boolean variants use `true` and `false` keys.
 - ESM only; Babel 8 is required for the plugin.
-- Slots and composition APIs are not implemented yet.
+- Composition APIs are not implemented yet.
 
 Calling `sxv()` without the Babel transform throws a configuration error.
 

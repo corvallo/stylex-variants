@@ -1,26 +1,36 @@
-import type { VariantDefinition, SXVConfig, MergeVariantDefinitions, VariantDefinitionOf, SXVResult } from "./types.js";
+import type {
+  CompoundVariant,
+  SXVResult,
+  StyleXCreateStyle,
+  VariantDefinition,
+  VariantSelection,
+  SlotDefinition,
+  SXVSlotsResult,
+  SlotVariantDefinition,
+  SlotCompoundVariant,
+} from "./types.js";
 
-type SXVFactory = {
-  <const T extends VariantDefinition>(config: SXVConfig<T>): SXVResult<T>;
-  extend<const Base extends SXVResult<VariantDefinition>, const Extension extends VariantDefinition>(
-    base: Base,
-    config: SXVConfig<Extension>,
-  ): SXVResult<MergeVariantDefinitions<VariantDefinitionOf<Base>, Extension>>;
+export type SXVConfig<T extends VariantDefinition> = {
+  base?: StyleXCreateStyle;
+  variants?: T;
+  defaultVariants?: VariantSelection<T>;
+  compoundVariants?: CompoundVariant<T>[];
+  slots?: never;
 };
 
-export const sxv: SXVFactory = Object.assign(
-  <const T extends VariantDefinition>(_config: SXVConfig<T>): SXVResult<T> => {
-    return (() => {
+export type SXVSlotsConfig<S extends SlotDefinition, V extends SlotVariantDefinition = SlotVariantDefinition> = {
+  slots: S;
+  variants?: V;
+  defaultVariants?: VariantSelection<V>;
+  compoundSlots?: SlotCompoundVariant<V>[];
+};
+
+export function sxv<const T extends VariantDefinition>(_config: SXVConfig<T>): SXVResult<T>;
+export function sxv<const S extends SlotDefinition, const V extends SlotVariantDefinition = SlotVariantDefinition>(_config: SXVSlotsConfig<S, V>): SXVSlotsResult<S, V>;
+export function sxv(_config: unknown): unknown {
+  return (() => {
     throw new Error(
       "sxv() must be compiled. Configure @stylex-variants/core/babel before the StyleX compiler.",
     );
-    }) as SXVResult<T>;
-  },
-  {
-    extend(_base: SXVResult<VariantDefinition>, _config: SXVConfig<VariantDefinition>) {
-    throw new Error(
-      "sxv.extend() must be compiled. Configure @stylex-variants/core/babel before the StyleX compiler.",
-    );
-    },
-  },
-) as SXVFactory;
+  });
+}

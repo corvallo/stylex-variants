@@ -2,7 +2,7 @@ import { Alert } from "./components/alert/alert";
 import { Badge } from "./components/badge/badge";
 import { Button } from "./components/button/button";
 import { Card } from "./components/card/card";
-import { IconButton } from "./components/icon-button/icon-button";
+import { SlotCard } from "./components/slot-card/slot-card";
 
 export function App() {
   return (
@@ -52,24 +52,6 @@ export function App() {
           <Button variant="danger" fullWidth>
             Full width danger compound
           </Button>
-        </div>
-      </section>
-
-      <section>
-        <h2>IconButton</h2>
-
-        <p>This component extends the base button recipe with icon sizing and shape.</p>
-
-        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <IconButton aria-label="Add" className="custom-icon-button">
-            +
-          </IconButton>
-          <IconButton variant="secondary" size="sm" aria-label="Remove">
-            −
-          </IconButton>
-          <IconButton size="lg" aria-label="Settings" style={{ background: "purple" }}>
-            ⚙
-          </IconButton>
         </div>
       </section>
 
@@ -164,6 +146,14 @@ export function App() {
             Error + strong produces the special compound styling.
           </Alert>
         </div>
+      </section>
+
+      <section>
+        <h2>Slots</h2>
+        <SlotCard tone="accent">
+          <strong>Card description</strong>
+          <span>Each part of this card has its own StyleX slot.</span>
+        </SlotCard>
       </section>
     </main>
   );
