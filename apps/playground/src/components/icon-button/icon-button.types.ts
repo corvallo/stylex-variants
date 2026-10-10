@@ -1,5 +1,5 @@
 import type { VariantProps } from "@stylex-variants/core";
-import type { iconButton } from "./icon-button.style";
+import type { button } from "../button/button.style";
 
-export type IconButtonVariants = VariantProps<typeof iconButton>;
+export type IconButtonVariants = VariantProps<typeof button>;
 export type IconButtonProps = React.ComponentProps<"button"> & IconButtonVariants;

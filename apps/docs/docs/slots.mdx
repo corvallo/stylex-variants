@@ -41,3 +41,54 @@ slot and merges optional `className` and `style` overrides at the call site.
 Variant styles are declared as slot maps. `compoundSlots` uses the same variant
 conditions as a regular compound variant, but applies its styles only to the
 named slots. When a condition is not satisfied, its slot styles are omitted.
+
+## Compound slots
+
+Use `compoundSlots` when a combination of variants should change more than one
+slot at the same time. Each entry contains the variant conditions and a `slots`
+object with the styles to apply to the matching slots.
+
+```tsx
+const alert = sxv({
+  slots: {
+    root: { display: "flex" },
+    icon: { width: 16, height: 16 },
+    message: { fontSize: 14 },
+  },
+  variants: {
+    status: {
+      info: {
+        root: { backgroundColor: "#eff6ff" },
+        icon: { color: "#2563eb" },
+      },
+      danger: {
+        root: { backgroundColor: "#fef2f2" },
+        icon: { color: "#dc2626" },
+      },
+    },
+    emphasis: {
+      normal: { message: { fontWeight: 400 } },
+      strong: { message: { fontWeight: 700 } },
+    },
+  },
+  defaultVariants: {
+    status: "info",
+    emphasis: "normal",
+  },
+  compoundSlots: [
+    {
+      status: "danger",
+      emphasis: "strong",
+      slots: {
+        root: { borderWidth: 2, borderColor: "#dc2626" },
+        message: { fontWeight: 800 },
+      },
+    },
+  ],
+});
+```
+
+The compound styles are applied only when every condition matches. Omitted
+variant props use `defaultVariants` while evaluating the conditions. A
+`className` or `style` passed to an individual slot is merged after the
+generated StyleX props for that slot.

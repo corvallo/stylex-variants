@@ -7,11 +7,11 @@ import stylexVariantsPlugin from "@stylex-variants/core/babel";
 
 export default defineConfig({
   plugins: [
-    react(),
-
     babel({
       plugins: [stylexVariantsPlugin],
     }),
+
+    react(),
 
     stylex({
       useCSSLayers: true,

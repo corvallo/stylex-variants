@@ -25,12 +25,19 @@ export type SXVSlotsConfig<S extends SlotDefinition, V extends SlotVariantDefini
   compoundSlots?: SlotCompoundVariant<V>[];
 };
 
-export function sxv<const T extends VariantDefinition>(_config: SXVConfig<T>): SXVResult<T>;
-export function sxv<const S extends SlotDefinition, const V extends SlotVariantDefinition = SlotVariantDefinition>(_config: SXVSlotsConfig<S, V>): SXVSlotsResult<S, V>;
-export function sxv(_config: unknown): unknown {
-  return (() => {
-    throw new Error(
-      "sxv() must be compiled. Configure @stylex-variants/core/babel before the StyleX compiler.",
-    );
-  });
-}
+export type SXVFactory = {
+  <const T extends VariantDefinition>(config: SXVConfig<T>): SXVResult<T>;
+  <const S extends SlotDefinition, const V extends SlotVariantDefinition = SlotVariantDefinition>(config: SXVSlotsConfig<S, V>): SXVSlotsResult<S, V>;
+  extend: (...args: any[]) => any;
+};
+
+export const sxv: SXVFactory = Object.assign(
+  (_config: unknown) => {
+    throw new Error("sxv() must be compiled. Configure @stylex-variants/core/babel before the StyleX compiler.");
+  },
+  {
+    extend: (_base: unknown, _config: unknown) => {
+      throw new Error("sxv.extend() must be compiled. Configure @stylex-variants/core/babel before the StyleX compiler.");
+    },
+  },
+);
