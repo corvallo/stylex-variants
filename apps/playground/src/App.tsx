@@ -93,9 +93,6 @@ export function App() {
                     Preview button
                   </Button>
                 </div>
-                <span {...stylex.props(styles.note)}>
-                  Selected: tone={tone}, size={size}, fullWidth={String(fullWidth)}
-                </span>
               </div>
               <CodeBlock
                 title="button.style.ts · recipe"
@@ -122,7 +119,7 @@ export function App() {
                 </Button>
               </Card>
               <Alert status="warning" emphasis="strong" title="Boolean variant">
-                Toggle `fullWidth` to select the explicit branch.
+                The checkbox selects the `true` or `false` branch.
               </Alert>
             </div>
           </section>

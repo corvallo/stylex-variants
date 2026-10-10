@@ -76,5 +76,4 @@ export const styles = stylex.create({
     lineHeight: 1.6,
   },
   result: { display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", minHeight: 56 },
-  note: { color: tokens.primaryLight, fontSize: 13 },
 });
