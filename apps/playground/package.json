@@ -19,6 +19,7 @@
     "@stylexjs/babel-plugin": "^0.19.1",
     "@stylexjs/stylex": "^0.19.1",
     "@stylexjs/unplugin": "^0.19.1",
+    "prism-react-renderer": "^2.4.1",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
