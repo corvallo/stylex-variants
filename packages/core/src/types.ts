@@ -28,8 +28,14 @@ export type SlotVariantDefinition = Record<string, Record<string, Partial<SlotDe
 export type SlotCompoundVariant<T extends SlotVariantDefinition> = VariantSelection<T> & {
   slots: Partial<SlotDefinition>;
 };
-export type SXVSlotsResult<T extends SlotDefinition, V extends SlotVariantDefinition = SlotVariantDefinition> = {
-  [K in keyof T]: (props?: VariantSelection<V> & Partial<Pick<ReturnType<typeof stylex.props>, "className" | "style">>) => ReturnType<typeof stylex.props>;
+export type SXVSlotsResult<
+  T extends SlotDefinition,
+  V extends SlotVariantDefinition = SlotVariantDefinition,
+> = {
+  [K in keyof T]: (
+    props?: VariantSelection<V> &
+      Partial<Pick<ReturnType<typeof stylex.props>, "className" | "style">>,
+  ) => ReturnType<typeof stylex.props>;
 };
 
 export type VariantProps<T> = T extends (props?: infer Props) => ReturnType<typeof stylex.props>

@@ -37,3 +37,7 @@ const styles = card();
 
 Slots are static StyleX recipes. The compiler creates one StyleX style map per
 slot and merges optional `className` and `style` overrides at the call site.
+
+Variant styles are declared as slot maps. `compoundSlots` uses the same variant
+conditions as a regular compound variant, but applies its styles only to the
+named slots. When a condition is not satisfied, its slot styles are omitted.

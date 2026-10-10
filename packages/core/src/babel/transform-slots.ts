@@ -112,7 +112,7 @@ export function transformSlots(path: NodePath<t.CallExpression>, state: PluginSt
             ])));
             });
             path.replaceWith(t.objectExpression(slots));
-            return;
+            return true;
           }
   }
   return false;

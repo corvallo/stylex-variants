@@ -11,6 +11,10 @@ time:
 - Configuration and styles must be static inline literals.
 - Spreads, computed keys, external style objects and dynamic style functions
   are rejected.
+- Slots, slot variants and `compoundSlots` are supported when their
+  configuration is static and declared inline.
+- `sxv.extend` must reference a base recipe declared in the same module. The
+  compiler does not follow imported recipes yet.
 - The package currently targets ESM and Babel 8.
 - Composition APIs are not implemented yet.
 
@@ -24,6 +28,11 @@ sxv({ base: styles });
 
 sxv({ variants: { ...externalVariants } });
 sxv({ variants: { tone: { primary: condition ? a : b } } });
+
+sxv({
+  slots: { root: styles.root },
+  variants: { tone: externalVariants },
+});
 ```
 
 Keep the recipe configuration inline and use static StyleX style objects.
