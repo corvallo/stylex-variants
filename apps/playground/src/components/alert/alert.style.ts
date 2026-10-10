@@ -1,3 +1,4 @@
+import { tokens } from "../../theme/tokens.stylex";
 import { sxv } from "@stylex-variants/core";
 
 export const alert = sxv({
@@ -14,27 +15,27 @@ export const alert = sxv({
   variants: {
     status: {
       info: {
-        backgroundColor: "#eff6ff",
-        borderColor: "#93c5fd",
-        color: "#1e40af",
+        backgroundColor: tokens.primaryText,
+        borderColor: tokens.primaryLight,
+        color: tokens.primary,
       },
 
       success: {
-        backgroundColor: "#f0fdf4",
-        borderColor: "#86efac",
-        color: "#166534",
+        backgroundColor: tokens.surface,
+        borderColor: tokens.success,
+        color: tokens.success,
       },
 
       warning: {
-        backgroundColor: "#fffbeb",
-        borderColor: "#fcd34d",
-        color: "#92400e",
+        backgroundColor: tokens.surface,
+        borderColor: tokens.warning,
+        color: tokens.warning,
       },
 
       error: {
-        backgroundColor: "#fef2f2",
-        borderColor: "#fca5a5",
-        color: "#991b1b",
+        backgroundColor: tokens.surface,
+        borderColor: tokens.danger,
+        color: tokens.danger,
       },
     },
 

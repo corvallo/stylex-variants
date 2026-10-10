@@ -6,6 +6,7 @@ import { Button } from "./components/button/button";
 import { Card } from "./components/card/card";
 import { SlotCard } from "./components/slot-card/slot-card";
 import { styles } from "./playground.style";
+import { theme } from "./theme/tokens.stylex";
 
 const sections = ["recipes", "overrides", "slots"] as const;
 type Section = (typeof sections)[number];
@@ -17,7 +18,7 @@ export function App() {
   const [fullWidth, setFullWidth] = useState(false);
 
   return (
-    <main {...stylex.props(styles.page)}>
+    <main {...stylex.props(styles.page, theme.root)}>
       <div {...stylex.props(styles.shell)}>
         <header {...stylex.props(styles.header)}>
           <span {...stylex.props(styles.eyebrow)}>Interactive examples</span>

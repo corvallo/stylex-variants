@@ -1,3 +1,4 @@
+import { tokens } from "../../theme/tokens.stylex";
 import { sxv } from "@stylex-variants/core";
 
 export const button = sxv({
@@ -16,27 +17,27 @@ export const button = sxv({
   variants: {
     variant: {
       primary: {
-        backgroundColor: "#2563eb",
-        borderColor: "#2563eb",
-        color: "#ffffff",
+        backgroundColor: tokens.primary,
+        borderColor: tokens.primary,
+        color: tokens.heading,
       },
 
       secondary: {
-        backgroundColor: "#e5e7eb",
-        borderColor: "#e5e7eb",
-        color: "#111827",
+        backgroundColor: tokens.surface,
+        borderColor: tokens.surface,
+        color: tokens.text,
       },
 
       outline: {
         backgroundColor: "transparent",
-        borderColor: "#2563eb",
-        color: "#2563eb",
+        borderColor: tokens.primary,
+        color: tokens.primary,
       },
 
       danger: {
-        backgroundColor: "#dc2626",
-        borderColor: "#dc2626",
-        color: "#ffffff",
+        backgroundColor: tokens.danger,
+        borderColor: tokens.danger,
+        color: tokens.heading,
       },
     },
 

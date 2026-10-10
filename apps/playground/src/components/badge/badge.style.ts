@@ -1,3 +1,4 @@
+import { tokens } from "../../theme/tokens.stylex";
 import { sxv } from "@stylex-variants/core";
 
 export const badge = sxv({
@@ -11,23 +12,23 @@ export const badge = sxv({
   variants: {
     tone: {
       neutral: {
-        backgroundColor: "#f3f4f6",
-        color: "#374151",
+        backgroundColor: tokens.surface,
+        color: tokens.text,
       },
 
       success: {
-        backgroundColor: "#dcfce7",
-        color: "#166534",
+        backgroundColor: tokens.surface,
+        color: tokens.success,
       },
 
       warning: {
-        backgroundColor: "#fef3c7",
-        color: "#92400e",
+        backgroundColor: tokens.surface,
+        color: tokens.warning,
       },
 
       danger: {
-        backgroundColor: "#fee2e2",
-        color: "#991b1b",
+        backgroundColor: tokens.surface,
+        color: tokens.danger,
       },
     },
 
@@ -70,7 +71,7 @@ export const badge = sxv({
       outlined: true,
 
       style: {
-        borderColor: "#16a34a",
+        borderColor: tokens.success,
       },
     },
 
@@ -79,7 +80,7 @@ export const badge = sxv({
       outlined: true,
 
       style: {
-        borderColor: "#d97706",
+        borderColor: tokens.warning,
       },
     },
 
@@ -88,7 +89,7 @@ export const badge = sxv({
       outlined: true,
 
       style: {
-        borderColor: "#dc2626",
+        borderColor: tokens.danger,
       },
     },
   ],

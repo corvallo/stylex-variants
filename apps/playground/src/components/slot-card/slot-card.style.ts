@@ -1,3 +1,4 @@
+import { tokens } from "../../theme/tokens.stylex";
 import { sxv } from "@stylex-variants/core";
 
 export const card = sxv({
@@ -10,27 +11,27 @@ export const card = sxv({
       borderRadius: 12,
       borderStyle: "solid",
       borderWidth: 1,
-      borderColor: "#d1d5db",
-      backgroundColor: "#ffffff",
+      borderColor: tokens.border,
+      backgroundColor: tokens.heading,
     },
     title: {
       fontSize: 18,
       fontWeight: 700,
-      color: "#111827",
+      color: tokens.text,
     },
     description: {
-      color: "green",
+      color: tokens.success,
     },
   },
   variants: {
     tone: {
       neutral: {
-        root: { backgroundColor: "#ffffff" },
-        title: { color: "#111827" },
+        root: { backgroundColor: tokens.heading },
+        title: { color: tokens.text },
       },
       accent: {
-        root: { backgroundColor: "#eff6ff" },
-        title: { color: "#2563eb" },
+        root: { backgroundColor: tokens.primaryText },
+        title: { color: tokens.primary },
       },
     },
   },
@@ -39,9 +40,9 @@ export const card = sxv({
     {
       tone: "accent",
       slots: {
-        root: { borderWidth: 2, borderColor: "#2563eb" },
-        title: { textTransform: "uppercase", color: "green" },
-        description: { color: "red" },
+        root: { borderWidth: 2, borderColor: tokens.primary },
+        title: { textTransform: "uppercase", color: tokens.success },
+        description: { color: tokens.danger },
       },
     },
   ],

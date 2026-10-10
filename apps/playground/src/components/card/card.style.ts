@@ -1,3 +1,4 @@
+import { tokens } from "../../theme/tokens.stylex";
 import { sxv } from "@stylex-variants/core";
 
 export const card = sxv({
@@ -14,20 +15,20 @@ export const card = sxv({
   variants: {
     appearance: {
       elevated: {
-        backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
+        backgroundColor: tokens.heading,
+        borderColor: tokens.surface,
         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
       },
 
       outlined: {
-        backgroundColor: "#ffffff",
-        borderColor: "#d1d5db",
+        backgroundColor: tokens.heading,
+        borderColor: tokens.border,
         boxShadow: "none",
       },
 
       filled: {
-        backgroundColor: "#f3f4f6",
-        borderColor: "#f3f4f6",
+        backgroundColor: tokens.surface,
+        borderColor: tokens.surface,
         boxShadow: "none",
       },
     },
