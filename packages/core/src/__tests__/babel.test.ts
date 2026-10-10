@@ -39,6 +39,65 @@ describe("babel plugin", () => {
     expect(result?.code).toContain("stylex.create");
   });
 
+  it("transforms sxv.extend by merging the source recipe", () => {
+    const result = transformSync(
+      `
+      import { sxv } from '@stylex-variants/core';
+      const button = sxv({
+        base: { padding: 8 },
+        variants: { tone: { primary: { color: 'red' } } },
+      });
+      const iconButton = sxv.extend(button, {
+        base: { borderRadius: 8 },
+        variants: { size: { sm: { padding: 4 } } },
+      });
+    `,
+      { plugins: [plugin] },
+    );
+
+    expect(result?.code).toContain("borderRadius");
+    expect(result?.code).toContain("iconButton");
+    expect(result?.code).not.toContain("sxv.extend");
+  });
+
+  it("keeps inherited variant precedence over the extension base", () => {
+    const result = transformSync(
+      `
+      import { sxv } from '@stylex-variants/core';
+      const button = sxv({
+        base: { width: 40 },
+        variants: { fullWidth: { false: { width: 'auto' } } },
+        defaultVariants: { fullWidth: false },
+      });
+      const iconButton = sxv.extend(button, { base: { width: 40 } });
+    `,
+      { plugins: [plugin] },
+    );
+
+    expect(result?.code).toContain('variant_9_fullWidth_');
+    expect(result?.code).toContain("width: 'auto'");
+    expect(result?.code).toContain('width: 40');
+  });
+
+  it("allows an extension to override an inherited variant", () => {
+    const result = transformSync(
+      `
+      import { sxv } from '@stylex-variants/core';
+      const button = sxv({
+        variants: { fullWidth: { false: { width: 'auto' } } },
+        defaultVariants: { fullWidth: false },
+      });
+      const iconButton = sxv.extend(button, {
+        variants: { fullWidth: { false: { width: 40 } } },
+      });
+    `,
+      { plugins: [plugin] },
+    );
+
+    expect(result?.code).toContain('width: 40');
+    expect(result?.code?.match(/width: 'auto'/g)).toHaveLength(1);
+  });
+
   it("does not transform unrelated sxv functions", () => {
     const result = transformSync(
       `
