@@ -1,7 +1,2 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");
-
-/* Vite needs a CSS entry point for StyleX's generated rules. */
-:root { --stylex-injection: 0; }
-* { box-sizing: border-box; }
-body { margin: 0; }
-button, select, input { font: inherit; }
+/* CSS entry point for the Vite StyleX compiler. All application styles are authored in StyleX. */
+@layer priority1, priority2, priority3, priority4, priority5;

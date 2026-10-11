@@ -23,4 +23,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check-types
       - run: pnpm --filter @stylex-variants/core test:run
+      - run: node --experimental-strip-types --test apps/playground/tests/model.test.ts
+      - run: pnpm --filter docs typecheck
       - run: pnpm build

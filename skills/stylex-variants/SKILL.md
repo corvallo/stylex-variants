@@ -1,31 +1,38 @@
 ---
 name: stylex-variants
-description: Create and review StyleX Variants recipes and React components using the sxv API, Babel constraints, and type-safe variant patterns.
+description: Write, integrate, debug, and review @stylex-variants/core recipes, slots, and typed components using the sxv API and its Babel transform. Use for StyleX Variants work, not general StyleX styling alone.
 ---
 
 # StyleX Variants
 
-Use this skill when writing or reviewing code that uses `@stylex-variants/core`.
-Prefer the package's static, type-safe recipe model and keep generated examples
-compatible with the Babel transform.
+Use the implementation available in the working project as the authority. In
+this repository, inspect `packages/core/src/index.ts`, `sxv.ts`, `types.ts`,
+`babel/`, and `__tests__/` under `packages/core/src` when behavior is uncertain.
+README examples can lag implementation, especially for slots and extension.
 
 ## Workflow
 
-1. Identify the component states and separate recurring states into named
-   variant groups.
-2. Put shared, always-applied styles in `base`.
-3. Add `defaultVariants` for the normal state and `compoundVariants` only for
-   combinations of existing selections.
-4. Derive component props with `VariantProps<typeof recipe>`.
-5. Preserve caller `className` and `style` by passing them to the recipe.
-6. Keep all recipe configuration and styles static and inline so the Babel
-   plugin can transform them.
+1. Check that the variants Babel transform runs before the StyleX compiler.
+   Use a named `sxv` import from `@stylex-variants/core`; import aliases work.
+2. Choose a single-element recipe (`base`, `compoundVariants`) or a slot recipe
+   (`slots`, `compoundSlots`). Keep configurations and style containers inline.
+3. Model recurring states as variants, use defaults where appropriate, and use
+   scalar compound conditions for combinations. Runtime variant selections and
+   caller inline overrides are supported; dynamic recipe style functions are not.
+4. Derive props from the recipe function, or from an individual slot function.
+   Forward DOM props separately from variant selections. Pass caller `className`
+   and `style` into the recipe or relevant slot so generated styles are retained.
+5. Validate types and the actual compiler pipeline for changed examples. Type
+   acceptance alone does not establish that a configuration is transformable.
 
-Read [references/api.md](references/api.md) for the configuration and return
-types, [references/patterns.md](references/patterns.md) for component recipes,
-and [references/limitations.md](references/limitations.md) before suggesting a
-dynamic or unsupported pattern.
+Read only the references relevant to the task:
 
-Do not invent `extend`, `compose`, slots, or other APIs that are not present in
-the current package. If a requested pattern needs one of those APIs, explain
-the limitation and show the closest supported static recipe.
+- [API](references/api.md): return shapes, selections, precedence, public types.
+- [Patterns](references/patterns.md): React, slots, responsive styles, Vite setup.
+- [Limitations](references/limitations.md): static syntax, missing transforms,
+  and current extension and slot implementation gaps. Read before using
+  `sxv.extend` or promising composition behavior.
+
+Slots and `sxv.extend` exist, but extension is not a typed deep-merge API in the
+current implementation. Do not invent `compose`, callable slot factories, or
+cross-module recipe inheritance.
