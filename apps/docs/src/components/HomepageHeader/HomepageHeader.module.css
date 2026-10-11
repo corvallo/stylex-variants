@@ -51,6 +51,12 @@
   color: #f8f9ff;
   backdrop-filter: blur(8px);
 }
+.install code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;

@@ -1,4 +1,2 @@
-/* Placeholder to ensure Vite emits a CSS asset for StyleX aggregation. */
-:root {
-  --stylex-injection: 0;
-}
+/* CSS entry point for the Vite StyleX compiler. All application styles are authored in StyleX. */
+@layer priority1, priority2, priority3, priority4, priority5;

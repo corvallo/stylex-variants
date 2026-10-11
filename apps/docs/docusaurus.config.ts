@@ -70,6 +70,12 @@ const config: Config = {
           label: "Docs",
         },
         {
+          href: "https://corvallo.github.io/stylex-variants/playground/",
+          label: "Playground",
+          position: "left",
+          target: "_self",
+        },
+        {
           href: "https://github.com/corvallo/stylex-variants",
           label: "GitHub",
           position: "right",

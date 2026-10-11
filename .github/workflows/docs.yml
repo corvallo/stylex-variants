@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - "apps/docs/**"
+      - "apps/playground/**"
+      - "packages/core/**"
+      - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - ".github/workflows/docs.yml"
@@ -31,7 +34,13 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @stylex-variants/core build
+      - run: pnpm --filter playground build --base=/stylex-variants/playground/
       - run: pnpm --filter docs build
+      - name: Include playground in the documentation site
+        run: |
+          mkdir -p apps/docs/build/playground
+          cp -R apps/playground/dist/. apps/docs/build/playground/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/docs/build
