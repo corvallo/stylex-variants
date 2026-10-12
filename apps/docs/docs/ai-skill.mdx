@@ -4,43 +4,113 @@ sidebar_position: 8
 
 # LLM resources
 
-Markdown resources for working with StyleX Variants in an LLM. Pass these files
-as context to your agent or use them directly in prompts when generating and
-reviewing recipes.
+The StyleX Variants skill helps an agent write, integrate, debug, and review
+`@stylex-variants/core` recipes and typed React components. It covers both
+single-element recipes and multi-element slot recipes, including the current
+compiler constraints.
 
-The resources are versioned with the repository and describe the real
-`@stylex-variants/core` API.
+The skill is versioned with the repository. Treat the implementation and tests
+in the working project as the authority: type acceptance and older README
+examples alone do not establish that a recipe compiles correctly.
 
 ## Resources
 
-| Resource                                                                                                                             | Use it for                           |
-| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
-| [`SKILL.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/SKILL.md)                        | General routing and recipe workflow  |
-| [`api.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/api.md)                 | Configuration and exported types     |
-| [`patterns.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/patterns.md)       | React component examples             |
-| [`limitations.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/limitations.md) | Unsupported patterns and constraints |
+| Resource                                                                                                                             | Use it for                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| [`SKILL.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/SKILL.md)                        | Entry point, task scope, and implementation workflow                                    |
+| [`api.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/api.md)                 | Recipe and slot return shapes, selections, precedence, overrides, and public types      |
+| [`patterns.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/patterns.md)       | Typed React components, shared slot selections, responsive styles, and Vite integration |
+| [`limitations.md`](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/limitations.md) | Static syntax, missing transforms, extension behavior, and slot validation gaps         |
 
-You can also browse the [resource source on GitHub](https://github.com/corvallo/stylex-variants/tree/main/skills/stylex-variants).
+Browse the [complete skill directory on GitHub](https://github.com/corvallo/stylex-variants/tree/main/skills/stylex-variants).
 
-## What the resources cover
+## What the skill covers
 
-The skill covers:
+- Single-element recipes using `base`, `variants`, `defaultVariants`, and
+  `compoundVariants`.
+- Slot recipes using `slots`, slot-specific variant styles, and `compoundSlots`.
+- String, numeric, and boolean selections, including explicit `false` values
+  and default resolution.
+- Style precedence and caller `className` and `style` overrides.
+- React props inferred with `VariantProps`, with DOM props forwarded separately.
+- Responsive and interactive StyleX values inside static inline recipe styles.
+- Babel/Vite integration and verification through the complete StyleX pipeline.
+- The actual behavior and limitations of `sxv.extend` and slot compilation.
 
-- `base`, `variants`, `defaultVariants` and `compoundVariants`;
-- boolean variants and explicit `false` values;
-- `className`, `style` and responsive StyleX styles;
-- typed React components with `VariantProps`;
-- static configuration requirements and unsupported APIs.
+## Workflow
+
+1. Confirm that `@stylex-variants/core/babel` runs before the StyleX compiler and
+   that the application retains its CSS extraction setup.
+2. Choose a single-element or slot recipe. Keep recipe configurations and style
+   containers inline and statically analyzable.
+3. Model recurring states as variants, use defaults where appropriate, and use
+   scalar compound conditions for combinations. Call-time selections and inline
+   overrides can be dynamic; recipe style functions are not supported.
+4. Infer props from the recipe or an individual slot. Pass styling overrides to
+   that function and forward events, accessibility attributes, and other DOM
+   props to the element.
+5. Check types and the full compiler pipeline. A successful variants-only Babel
+   transform does not verify StyleX compilation or CSS extraction.
+
+## Slots and composition
+
+A slot recipe returns an object of functions, not a callable factory. Pass the
+same selection to each slot that should share state:
+
+```tsx
+// `card` is an sxv({ slots, variants, ... }) recipe.
+const selection = { tone: "accent" } as const;
+
+<article {...card.root(selection)}>
+  <h2 {...card.title(selection)}>Title</h2>
+</article>;
+```
+
+Infer slot props with `VariantProps<typeof card.root>`.
+`VariantProps<typeof card>` is `never`. Overrides apply to the individual slot
+call; root overrides do not automatically affect the title.
+
+:::caution Current compiler limitations
+
+`sxv.extend` exists, but it is not currently a typed deep-merge API. It returns
+`any`, requires a locally resolvable base recipe, and retains the first occurrence
+of duplicate top-level configuration fields. It cannot override or merge an
+existing `base`, `variants`, `defaultVariants`, or `compoundVariants` field.
+New fields can take effect when absent from the base.
+
+Slot compilation also has validation gaps: malformed or unsupported entries can
+be skipped, and misspelled slot names can pass type checking without useful
+output. Use explicit declared slot names and static inline maps.
+
+Read the [limitations reference](https://raw.githubusercontent.com/corvallo/stylex-variants/main/skills/stylex-variants/references/limitations.md)
+before relying on composition or advanced slot behavior. Do not assume a public
+`compose` API, callable slot factories, or cross-module recipe inheritance.
+
+:::
 
 ## Use with an LLM
 
-Copy the `skills/stylex-variants` directory into the skill directory used by
-your LLM environment, or provide the Markdown files as prompt context. The
-entrypoint is `SKILL.md`; load the reference files when the task needs detailed
-API or limitation guidance.
+Copy the complete `skills/stylex-variants` directory into the skill directory
+supported by your agent environment, preserving `SKILL.md` and `references/`.
+Alternatively, provide those Markdown files as prompt context.
 
-Keep the skill version aligned with the package version. When the library API
-changes, update the skill and its references in the same change.
+Start with `SKILL.md`, then load only the references relevant to the task. For
+example, a React slot component needs the API and patterns references; extension
+or compiler debugging also needs the limitations reference.
+
+Example prompt:
+
+```text
+Use skills/stylex-variants/SKILL.md and its relevant references.
+Create a typed React card with root and title slots and a compoundSlots rule.
+Inspect the installed implementation, preserve the project's StyleX pipeline,
+forward DOM props separately, and verify types and compiled styles.
+```
+
+The links above track `main`, which may be newer than your installed package.
+Use the skill from the matching repository revision when working with an older
+release. Update the documentation and skill references together when guidance
+changes.
 
 ## What the skill does not do
 
