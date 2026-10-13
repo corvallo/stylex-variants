@@ -1,0 +1,186 @@
+---
+sidebar_position: 2
+---
+
+# StyleX vs. StyleX Variants
+
+StyleX already provides typed styles, and you can build type-safe component
+variants directly with it. StyleX Variants adds a recipe convention for variant
+selection, defaults, compound conditions, and slot styling, with prop types
+derived from that configuration.
+
+The examples below implement the same button with both approaches:
+
+- `tone`: `primary` or `neutral`;
+- `size`: `sm` or `lg`;
+- defaults: `primary` and `sm`;
+- bold text when `tone="primary"` and `size="lg"`;
+- native button props and caller `className` / `style` overrides.
+
+## With StyleX
+
+Separate style maps let TypeScript infer the accepted variant values with
+`keyof typeof`. Defaults and compound conditions live in the component.
+
+```tsx title="Button.tsx — StyleX"
+import * as stylex from "@stylexjs/stylex";
+import type { ComponentPropsWithoutRef } from "react";
+
+const styles = stylex.create({
+  base: {
+    display: "inline-flex",
+    borderRadius: 8,
+  },
+  primaryLarge: {
+    fontWeight: 700,
+  },
+});
+
+const tones = stylex.create({
+  primary: {
+    backgroundColor: "blue",
+    color: "white",
+  },
+  neutral: {
+    backgroundColor: "lightgray",
+    color: "black",
+  },
+});
+
+const sizes = stylex.create({
+  sm: { padding: 8 },
+  lg: { padding: 16 },
+});
+
+type ButtonProps = ComponentPropsWithoutRef<"button"> & {
+  tone?: keyof typeof tones;
+  size?: keyof typeof sizes;
+};
+
+export function Button({
+  tone = "primary",
+  size = "sm",
+  className,
+  style,
+  ...domProps
+}: ButtonProps) {
+  const resolved = stylex.props(
+    styles.base,
+    tones[tone],
+    sizes[size],
+    tone === "primary" && size === "lg" && styles.primaryLarge,
+  );
+
+  return (
+    <button
+      {...domProps}
+      {...resolved}
+      className={[resolved.className, className].filter(Boolean).join(" ")}
+      style={{ ...resolved.style, ...style }}
+    />
+  );
+}
+```
+
+This approach is already type-safe. You could also declare explicit unions such
+as `tone?: "primary" | "neutral"`, but the maps above avoid maintaining those
+unions separately from the styles. No variants library is required.
+
+## With StyleX Variants
+
+The recipe groups the variant maps, defaults, and compound conditions together.
+`VariantProps` derives the selection props, including styling overrides, from
+the recipe. The component still forwards native DOM props separately.
+
+```tsx title="Button.tsx — StyleX Variants"
+import { sxv, type VariantProps } from "@stylex-variants/core";
+import type { ComponentPropsWithoutRef } from "react";
+
+const button = sxv({
+  base: {
+    display: "inline-flex",
+    borderRadius: 8,
+  },
+  variants: {
+    tone: {
+      primary: {
+        backgroundColor: "blue",
+        color: "white",
+      },
+      neutral: {
+        backgroundColor: "lightgray",
+        color: "black",
+      },
+    },
+    size: {
+      sm: { padding: 8 },
+      lg: { padding: 16 },
+    },
+  },
+  defaultVariants: {
+    tone: "primary",
+    size: "sm",
+  },
+  compoundVariants: [
+    {
+      tone: "primary",
+      size: "lg",
+      style: { fontWeight: 700 },
+    },
+  ],
+});
+
+type Variants = VariantProps<typeof button>;
+type ButtonProps = Variants & Omit<ComponentPropsWithoutRef<"button">, keyof Variants>;
+
+export function Button({ tone, size, className, style, ...domProps }: ButtonProps) {
+  return <button {...domProps} {...button({ tone, size, className, style })} />;
+}
+```
+
+This version requires the variants Babel transform to run before the StyleX
+compiler. See [installation](./installation) for the setup.
+
+## Type safety in both approaches
+
+Both implementations accept the same usage and reject unsupported selections:
+
+```tsx
+<Button tone="primary" size="lg" onClick={() => console.log("Clicked")}>
+  Continue
+</Button>;
+
+// TypeScript errors with either implementation:
+<Button tone="danger">Continue</Button>;
+<Button size="xl">Continue</Button>;
+```
+
+| Concern             | StyleX example                            | StyleX Variants example                           |
+| ------------------- | ----------------------------------------- | ------------------------------------------------- |
+| Style definitions   | Typed by StyleX                           | Typed recipe styles, compiled through StyleX      |
+| Variant prop types  | Derived from each map with `keyof typeof` | Derived from the recipe with `VariantProps`       |
+| Defaults            | Component parameter defaults              | `defaultVariants` in the recipe                   |
+| Compound conditions | Expressions passed to `stylex.props`      | `compoundVariants` entries                        |
+| Caller overrides    | Merged in the component                   | Merged by the recipe function                     |
+| Build setup         | StyleX compilation                        | Variants transform followed by StyleX compilation |
+
+Neither approach validates arbitrary external values at runtime. Validate
+untrusted input before using it as a variant selection.
+
+## Which approach should you use?
+
+For a component with a few variants, direct StyleX is straightforward and gives
+you control over the selection logic. The examples above also show that a
+recipe does not necessarily mean fewer total lines of code.
+
+StyleX Variants becomes useful when you want the same structure across many
+components: a consistent place for defaults and combinations, inferred recipe
+props, and a shared convention for [slots and compound slots](./slots).
+
+The tradeoff is an additional build transform and a statically analyzable recipe
+format. Review the [current limitations](./limitations), especially before using
+recipe extension. Choose it for the recipe model and consistency, rather than
+because StyleX alone lacks type safety.
+
+[Try the interactive examples](https://corvallo.github.io/stylex-variants/playground/)
+to explore variant selection and the rendered components.
